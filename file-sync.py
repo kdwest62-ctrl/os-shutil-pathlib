@@ -35,6 +35,7 @@ try:
                             count += 1
                     else:
                         print("Path does not exist")
+                        count += 1
         else:
             print("No files in source directory")
     else:
