@@ -1,70 +1,55 @@
-import shutil
 from pathlib import Path
+import shutil
 
-try:
-    path = Path(input("Path: "))
-    if path.exists():
-        dirs_list = []
-        total_dirs = int(input("Number of directories to create: "))
-        if total_dirs > 0:
-            dir_count = 1
-            while dir_count <= total_dirs:
-                dir_name= input(f"Directory {dir_count} name: ")
-                new_dir_path = path / dir_name
-                new_dir_path.mkdir()
-                dirs_list.append(dir_name)
-                dir_count += 1
+path = Path(input("Directory path: "))
+if path.exists():
+    files = []
+    for item in path.iterdir():
+        if item.is_file():
+            files.append(item)
 
-            file_extensions = []
-            items = path.iterdir()
-            for item in items:
-                if item.is_file():
-                    file_extensions.append(item.suffix)
-            print(set(file_extensions))
+    if len(files) > 0:
+        extensions = []
+        for file in files:
+            extensions.append(file.suffix)
 
-            extensions = []
-            total_ext = int(input("Number of file extensions to organize: "))
-            if total_ext > 0:
-                ext_count = 1
-                while ext_count <= total_ext:
-                    extension = input(f"File extension {ext_count} name: ")
-                    if extension in file_extensions:
-                        extensions.append(extension)
-                        ext_count += 1
-                    else:
-                        print("File extension not found. Try again")
-
-                destinations = []
-                print(dirs_list)
-                for item in extensions:
-                    destination = input(f"Directory for {item}: ")
-                    if destination in dirs_list:
-                        destinations.append(destination)
-                    else:
-                        print("Directory not found")
-                ext_with_dst = dict(zip(extensions, destinations))
-
-                if len(ext_with_dst.values()) != 0:
-                    items = path.iterdir()
-                    for item in items:
-                        if item.is_file():
-                            if item.suffix in extensions:
-                                shutil.move(str(item), str(path / ext_with_dst[item.suffix]))
-
-                    dirs_files = []
-                    dirs_path_list = []
-                    for item in dirs_list:
-                        dir_path = path / item
-                        for file in dir_path.iterdir():
-                            dirs_path_list.append(file)
-                        count = len(dirs_path_list)
-                        dirs_files.append(count)
-                    files_count = dict(zip(dirs_list, dirs_files))
-                    for key, value in files_count.items():
-                        print(f"Files moved to {key}: {value}")
+        print(set(extensions))
+        total = int(input("Number of file extensions to organize: "))
+        if total > 0:
+            count = 0
+            while count < total:
+                extension = input("Select extension: ")
+                if extension in extensions:
+                    decide = input("Create new directory or use existing (c/u): ")
+                    if decide == 'c':
+                        name = input("Directory name: ")
+                        new_dir = path / name
+                        Path(new_dir).mkdir()
+                        for file in files:
+                            if file.suffix == extension:
+                                shutil.move(str(file), new_dir)
+                                print(f"{file.name} moved to {name}")
+                                count += 1
+                    elif decide == 'u':
+                        name = input("Directory name: ")
+                        dir_path = path / name
+                        dir_names = []
+                        for item in path.iterdir():
+                            if item.is_dir():
+                                dir_names.append(item.name)
+                        if name in dir_names:
+                            for item in path.iterdir():
+                                if item == dir_path:
+                                    for file in files:
+                                        if file.suffix == extension:
+                                            shutil.move(str(file), dir_path)
+                                            print(f"{file.name} moved to {name}")
+                                            count += 1
+                        else:
+                            print("Directory not found")
+                else:
+                    print("File extension not found")
     else:
-        print("Path not found")
-except FileExistsError:
-    print("File/directory already exists")
-except ValueError:
-    print("Please input a number")
+        print("No files in directory")
+else:
+    print("Path does not exist")
