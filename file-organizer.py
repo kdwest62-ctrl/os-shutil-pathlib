@@ -31,13 +31,14 @@ if path.exists():
                                 print(f"{file.name} moved to {name}")
                                 count += 1
                     elif decide == 'u':
-                        name = input("Directory name: ")
-                        dir_path = path / name
                         dir_names = []
                         for item in path.iterdir():
                             if item.is_dir():
                                 dir_names.append(item.name)
+                        print(dir_names)
+                        name = input("Directory name: ")
                         if name in dir_names:
+                            dir_path = path / name
                             for item in path.iterdir():
                                 if item == dir_path:
                                     for file in files:
