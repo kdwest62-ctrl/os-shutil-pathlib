@@ -48,23 +48,26 @@ if path.exists():
                         print(f"{reference[number]} removed from list")
                         count += 1
             elif choice == '4':
-                decide = input("Create new directory or use existing (c/u): ")
-                if decide == 'c':
-                    location = Path(input("Location: "))
-                    name = input("Name: ")
-                    dir_path = location / name
-                    dir_path.mkdir()
-                    for item in backup_list:
-                        shutil.copy2(str(item), str(dir_path))
-                        print(f"{item} copied to {dir_path}")
-                elif decide == 'u':
-                    dir_path = Path(input("Directory path: "))
-                    if dir_path.exists():
+                if len(backup_list) == 0:
+                    print("No files in backup list")
+                else:
+                    decide = input("Create new directory or use existing (c/u): ")
+                    if decide == 'c':
+                        location = Path(input("Location: "))
+                        name = input("Name: ")
+                        dir_path = location / name
+                        dir_path.mkdir()
                         for item in backup_list:
                             shutil.copy2(str(item), str(dir_path))
                             print(f"{item} copied to {dir_path}")
-                    else:
-                        print("Path does not exist")
+                    elif decide == 'u':
+                        dir_path = Path(input("Directory path: "))
+                        if dir_path.exists():
+                            for item in backup_list:
+                                shutil.copy2(str(item), str(dir_path))
+                                print(f"{item} copied to {dir_path}")
+                        else:
+                            print("Path does not exist")
             elif choice == '5':
                 break
             else:
