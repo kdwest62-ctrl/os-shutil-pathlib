@@ -7,7 +7,6 @@ if path.exists():
     for item in path.rglob('*'):
         if item.is_file():
             files.append(item)
-
     if len(files) > 0:
         backup_list = []
         print("1. Show backup list\n2. Add files\n3. Remove files\n4. Backup\n5. Exit")
@@ -43,9 +42,10 @@ if path.exists():
                         print(k, v)
                     count = 0
                     while count < total:
-                        number = int(input("Select file (num): "))
-                        del backup_list[number]
-                        print(f"{reference[number]} removed from list")
+                        number = int(input("Select file (input number): "))
+                        file_path = reference[number]
+                        backup_list.remove(file_path)
+                        print(f"{file_path} removed from list")
                         count += 1
             elif choice == '4':
                 if len(backup_list) == 0:
@@ -53,8 +53,8 @@ if path.exists():
                 else:
                     decide = input("Create new directory or use existing (c/u): ")
                     if decide == 'c':
-                        location = Path(input("Location: "))
-                        name = input("Name: ")
+                        location = Path(input("Location for new directory: "))
+                        name = input("Name for new directory: ")
                         dir_path = location / name
                         dir_path.mkdir()
                         for item in backup_list:
