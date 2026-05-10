@@ -33,17 +33,18 @@ if len(name) >= 3:
                             print(f"{reference[num]} removed")
                     elif decide == 's':
                         total = int(input("How many files to remove? "))
-                        for num, path in reference.items():
-                            print(num, path)
-                        count = 0
-                        while count < total:
-                            num = int(input("Remove file (input number): "))
-                            if num in reference.keys():
-                                reference[num].unlink()
-                                print(f"{reference[num]} removed")
-                                count += 1
-                            else:
-                                print("Number not in list")
+                        if total > 0:
+                            for num, path in reference.items():
+                                print(num, path)
+                            count = 0
+                            while count < total:
+                                num = int(input("Remove file (input number): "))
+                                if num in reference.keys():
+                                    reference[num].unlink()
+                                    print(f"{reference[num]} removed")
+                                    count += 1
+                                else:
+                                    print("Number not in list")
         else:
             print("Directory empty")
     else:
