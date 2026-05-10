@@ -1,80 +1,52 @@
 from pathlib import Path
-import pandas as pd
 
-try:
-    file_name = input("File name: ")
-    if len(file_name) >= 3:
-        path = input("Search for file (input directory path): ")
-        if Path(path).exists():
-            files = []
-            for item in Path(path).rglob('*'):
-                if Path(item).is_file():
-                    files.append(str(item))
-
-            if len(files) > 0:
-                paths = []
-                for file_path in files:
-                    if file_name in file_path:
-                        paths.append(file_path)
-
-                if len(paths) > 0:
-                    names = []
-                    location = []
-                    sizes = []
-                    nums = []
-                    num = 0
-                    for item in paths:
-                        names.append(Path(item).name)
-                        location.append(Path(item).parent)
-                        size = Path(item).stat().st_size / (1024**2)
-                        sizes.append(round(size, 2))
-                        nums.append(num)
-                        num += 1
-
-                    data = {'Number': [i for i in nums],
-                            'Location': [i for i in location],
-                            'Size (mb)': [i for i in sizes]}
-                    df = pd.DataFrame(data, index=[i for i in names])
-                    print(df.to_string())
-
-                    print('-' * 8)
-                    remove = input("Remove duplicates? (y/n): ")
-                    if remove == 'y':
-                        reference = dict(zip(nums, paths))
-                        decide = input("Remove all or selection? (a/s): ")
-                        if decide == 'a':
-                            count = 0
-                            while count < 1:
-                                protect = int(input("Select file to protect (number only): "))
-                                if protect in reference.keys():
-                                    del reference[protect]
-                                    for path in reference.values():
-                                        Path(path).unlink()
-                                    print("All unprotected files removed")
-                                    count += 1
-                                else:
-                                    print("Number not in list")
-                        elif decide == 's':
-                            total = int(input("How many files to remove? "))
-                            if 0 < total < len(paths):
-                                count = 0
-                                while count < total:
-                                    number = int(input("Select file to remove (number only): "))
-                                    if number in reference.keys():
-                                        Path(reference[number]).unlink()
-                                        print(f"{Path(reference[number]).name} removed")
-                                        count += 1
-                                    else:
-                                        print("Number not in list")
-                            else:
-                                print("Invalid input")
-                else:
-                    print("No files found")
+name = input("File name: ")
+if len(name) >= 3:
+    dir_path = Path(input("Search for files (input directory path): "))
+    if dir_path.exists():
+        files = []
+        for item in dir_path.rglob('*'):
+            if item.is_file():
+                files.append(item)
+        if len(files) > 0:
+            match = []
+            for file in files:
+                if name in file.name:
+                    match.append(file)
+            if len(match) == 0:
+                print("No files matched your search")
             else:
-                print("No files in path")
+                for item in match:
+                    print(item)
+                remove = input("Remove files? (y/n): ")
+                if remove == 'y':
+                    nums = [i for i in range(len(match))]
+                    reference = dict(zip(nums, match))
+                    decide =  input("Remove all duplicates or a selection? (a/s): ")
+                    if decide == 'a':
+                        for num, path in reference.items():
+                            print(num, path)
+                        keep = int(input("Select file to be kept (input number): "))
+                        del reference[keep]
+                        for num in reference.keys():
+                            reference[num].unlink()
+                            print(f"{reference[num]} removed")
+                    elif decide == 's':
+                        total = int(input("How many files to remove? "))
+                        for num, path in reference.items():
+                            print(num, path)
+                        count = 0
+                        while count < total:
+                            num = int(input("Remove file (input number): "))
+                            if num in reference.keys():
+                                reference[num].unlink()
+                                print(f"{reference[num]} removed")
+                                count += 1
+                            else:
+                                print("Number not in list")
         else:
-            print("Path does not exist")
+            print("Directory empty")
     else:
-        print("Name must be 3 letters or more")
-except ValueError:
-    print("Invalid input")
+        print("Path does not exist")
+else:
+    print("File name length must be 3 words or longer")
