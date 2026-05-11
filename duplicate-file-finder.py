@@ -66,3 +66,5 @@ try:
         print("File name length must be 3 words or longer")
 except ValueError:
     print("Please input a number")
+except KeyError:
+    print("Number not in list")
