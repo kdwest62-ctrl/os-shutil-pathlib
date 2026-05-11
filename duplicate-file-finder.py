@@ -24,13 +24,23 @@ if len(name) >= 3:
                     reference = dict(zip(nums, match))
                     decide =  input("Remove all duplicates or a selection? (a/s): ")
                     if decide == 'a':
-                        for num, path in reference.items():
-                            print(num, path)
-                        keep = int(input("Select file to be kept (input number): "))
-                        del reference[keep]
-                        for num in reference.keys():
-                            reference[num].unlink()
-                            print(f"{reference[num]} removed")
+                        if len(match) > 1:
+                            for num, path in reference.items():
+                                print(num, path)
+                            keep = int(input("Select file to keep (input number): "))
+                            confirm = input("Confirm delete? (y/n): ")
+                            if confirm == 'y':
+                                del reference[keep]
+                                for num in reference.keys():
+                                    reference[num].unlink()
+                                    print(f"{reference[num]} removed")
+                        else:
+                            print("Only 1 file found")
+                            confirm = input("Confirm delete? (y/n): ")
+                            if confirm == 'y':
+                                for path in match:
+                                    path.unlink()
+                                    print(f"{path} removed")
                     elif decide == 's':
                         total = int(input("How many files to remove? "))
                         if total > 0:
