@@ -30,15 +30,18 @@ if path.exists():
                 for num, empty_dir in reference.items():
                     print(num, empty_dir)
                 total = int(input("How many empty directories to remove: "))
-                removed = 0
-                while removed < total:
-                    num = int(input("Select directory (number): "))
-                    if num in reference.keys():
-                        reference[num].rmdir()
-                        removed += 1
-                        print(f"{reference[num]} removed successfully")
-                    else:
-                        print("Number not in list")
+                if 0 < total <= len(empty_dirs):
+                    removed = 0
+                    while removed < total:
+                        num = int(input("Select directory (number): "))
+                        if num in reference.keys():
+                            reference[num].rmdir()
+                            removed += 1
+                            print(f"{reference[num]} removed successfully")
+                        else:
+                            print("Number not in list")
+                else:
+                    print(f"There are {len(empty_dirs)} empty directories")
         else:
             print("No empty directories")
     else:
