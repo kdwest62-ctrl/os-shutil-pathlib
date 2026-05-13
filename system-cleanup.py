@@ -55,7 +55,8 @@ try:
                             else:
                                 print("Number not in list")
             else:
-                print("No files matched the criteria")
+                print(f"Files: {len(files)}")
+                print(f"Match: {len(match)}")
         else:
             print("Empty directory")
     else:
