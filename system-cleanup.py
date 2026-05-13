@@ -39,16 +39,17 @@ if path.exists():
                     print(f"{item} removed successfully")
             elif remove == 's':
                 total = int(input("How many files to remove? "))
-                nums = [i for i in range(len(match))]
-                reference = dict(zip(nums, match))
-                for index, file in reference.items():
-                    print(index, file)
-                count = 0
-                while count < total:
-                    select = int(input("Select file (number): "))
-                    reference[select].unlink()
-                    print(f"{reference[select]} removed successfully")
-                    count += 1
+                if 0 < total <= len(match):
+                    nums = [i for i in range(len(match))]
+                    reference = dict(zip(nums, match))
+                    for index, file in reference.items():
+                        print(index, file)
+                    count = 0
+                    while count < total:
+                        select = int(input("Select file (number): "))
+                        reference[select].unlink()
+                        print(f"{reference[select]} removed successfully")
+                        count += 1
         else:
             print("No files matched the criteria")
     else:
