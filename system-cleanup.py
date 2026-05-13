@@ -47,9 +47,12 @@ if path.exists():
                     count = 0
                     while count < total:
                         select = int(input("Select file (number): "))
-                        reference[select].unlink()
-                        print(f"{reference[select]} removed successfully")
-                        count += 1
+                        if select in reference.keys():
+                            reference[select].unlink()
+                            print(f"{reference[select]} removed successfully")
+                            count += 1
+                        else:
+                            print("Number not in list")
         else:
             print("No files matched the criteria")
     else:
