@@ -30,6 +30,7 @@ try:
                     sizes.append(size)
 
             if len(match) > 0:
+                print(f"Match: {len(match)}")
                 match_reference = dict(zip(match, sizes))
                 for k, v in match_reference.items():
                     print(f"{v} {unit} | {k}")
