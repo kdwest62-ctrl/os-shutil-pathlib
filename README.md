@@ -2,10 +2,14 @@
 Python scripts to automate file management tasks
 
 ## Environment
-PyCharm, or any Python IDE
+PyCharm, or any preferred Python IDE
 
 ## Libraries
 Built-in: os, shutil, and pathlib
+
+## How to run
+1. Copy and paste the codes to PyCharm or any preferred Python IDE
+2. Hit the run button
 
 ## Caution
 If you intend to test these scripts, please do not run them using your important files. Use disposable or backup files instead.
