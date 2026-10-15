@@ -38,17 +38,24 @@ if path.exists():
         for path in duplicate_files:
             parent.append(path.parent)
             name.append(path.name)
-
-        data = {'Parent':[i for i in parent], 'Name': [i for i in name]}
+        data = {'Parent':[i for i in parent], 'Name': [i for i in name], 'Path': [i for i in duplicate_files]}
         df = pd.DataFrame(data)
         print(df.to_string())
         print('-' * 8)
 
         print('Tasks\n1. Remove files\n2. Show file size distribution\n3. Exit')
+        print('-' * 8)
         while True:
             task = input('Select task: ')
             if task == '1':
-                pass
+                files_to_remove = int(input('Number of files to remove: '))
+                if 0 < files_to_remove <= len(duplicate_files):
+                    for n in range(1, files_to_remove + 1):
+                        index = int(input(f'Row index (file {n}): '))
+                        file_to_remove = df.loc[index, 'Path']
+                        file_to_remove.unlink()
+                        print('File removed successfully')
+                print('-' * 8)
             elif task == '2':
                 duplicate_sizes = []
                 for path in duplicate_files:
@@ -64,6 +71,7 @@ if path.exists():
                 plt.pie(data, labels=categories, colors=custom_colors, autopct='%1.1f%%')
                 plt.title('File Size Distribution in Directory')
                 plt.show()
+                print('-' * 8)
             elif task == '3':
                 print('Program closed')
                 break
