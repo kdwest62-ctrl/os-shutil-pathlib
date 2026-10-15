@@ -1,70 +1,63 @@
 from pathlib import Path
+import pandas as pd
+import matplotlib.pyplot as plt
 
-try:
-    name = input("File name: ")
-    if len(name) >= 3:
-        dir_path = Path(input("Search for files (input directory path): "))
-        if dir_path.exists():
-            files = []
-            for item in dir_path.rglob('*'):
-                if item.is_file():
-                    files.append(item)
-            if len(files) > 0:
-                match = []
-                for file in files:
-                    if name in file.name:
-                        match.append(file)
-                if len(match) == 0:
-                    print("No files matched your search")
-                else:
-                    for item in match:
-                        print(item)
-                    remove = input("Remove files? (y/n): ")
-                    if remove == 'y':
-                        nums = [i for i in range(len(match))]
-                        reference = dict(zip(nums, match))
-                        decide =  input("Remove all duplicates or a selection? (a/s): ")
-                        if decide == 'a':
-                            if len(match) > 1:
-                                for num, path in reference.items():
-                                    print(num, path)
-                                keep = int(input("Select file to keep (input number): "))
-                                confirm = input("Confirm delete? (y/n): ")
-                                if confirm == 'y':
-                                    del reference[keep]
-                                    for num in reference.keys():
-                                        reference[num].unlink()
-                                        print(f"{reference[num]} removed")
-                            else:
-                                print("Only 1 file found")
-                                confirm = input("Confirm delete? (y/n): ")
-                                if confirm == 'y':
-                                    for path in match:
-                                        path.unlink()
-                                        print(f"{path} removed")
-                        elif decide == 's':
-                            total = int(input("How many files to remove? "))
-                            if total > 0:
-                                for num, path in reference.items():
-                                    print(num, path)
-                                count = 0
-                                while count < total:
-                                    num = int(input("Remove file (input number): "))
-                                    if num in reference.keys():
-                                        reference[num].unlink()
-                                        print(f"{reference[num]} removed")
-                                        count += 1
-                                    else:
-                                        print("Number not in list")
-                        else:
-                            print("Invalid input")
-            else:
-                print("Directory empty")
-        else:
-            print("Path does not exist")
+path = Path(input('Directory path: '))
+if path.exists():
+    files = []
+    stems = []
+    for item in path.rglob('*'):
+        if item.is_file():
+            files.append(item)
+            stems.append(item.stem)
+
+    stems_no_repeat = []
+    for stem in stems:
+        if stem not in stems_no_repeat:
+            stems_no_repeat.append(stem)
+    counts = []
+    for stem in stems_no_repeat:
+        count = stems.count(stem)
+        counts.append(count)
+    stem_counter = dict(zip(stems_no_repeat, counts))
+
+    stems_with_dpl = []
+    for stem in stem_counter.keys():
+        if stem_counter[stem] > 1:
+            stems_with_dpl.append(stem)
+    duplicate_files = []
+    for file in files:
+        if file.stem in stems_with_dpl:
+            duplicate_files.append(file)
+
+    if len(duplicate_files) == 0:
+        print('No duplicates found')
     else:
-        print("File name length must be 3 words or longer")
-except ValueError:
-    print("Please input a number")
-except KeyError:
-    print("Number not in list")
+        parent = []
+        name = []
+        for path in duplicate_files:
+            parent.append(path.parent)
+            name.append(path.name)
+
+        data = {'Parent':[i for i in parent], 'Name': [i for i in name]}
+        df = pd.DataFrame(data)
+        print(df.to_string())
+
+        pie_chart = input('Show pie chart (y/n): ')
+        if pie_chart == 'y':
+            duplicate_sizes = []
+            for path in duplicate_files:
+                duplicate_sizes.append(path.stat().st_size)
+            file_sizes = []
+            for path in files:
+                file_sizes.append(path.stat().st_size)
+
+            data = [sum(duplicate_sizes) / sum(file_sizes),
+                    (sum(file_sizes) - sum(duplicate_sizes)) / sum(file_sizes)]
+            categories = ['Files + Duplicates', 'Files Without Duplicates']
+            custom_colors = ['red', 'silver']
+            plt.pie(data, labels=categories, colors=custom_colors, autopct='%1.1f%%')
+            plt.title('File Size Distribution in Directory')
+            plt.show()
+else:
+    print('Path does not exist')
