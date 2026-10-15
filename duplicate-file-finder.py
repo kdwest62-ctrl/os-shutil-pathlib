@@ -42,22 +42,30 @@ if path.exists():
         data = {'Parent':[i for i in parent], 'Name': [i for i in name]}
         df = pd.DataFrame(data)
         print(df.to_string())
+        print('-' * 8)
 
-        pie_chart = input('Show pie chart (y/n): ')
-        if pie_chart == 'y':
-            duplicate_sizes = []
-            for path in duplicate_files:
-                duplicate_sizes.append(path.stat().st_size)
-            file_sizes = []
-            for path in files:
-                file_sizes.append(path.stat().st_size)
+        print('Tasks\n1. Remove files\n2. Show file size distribution\n3. Exit')
+        while True:
+            task = input('Select task: ')
+            if task == '1':
+                pass
+            elif task == '2':
+                duplicate_sizes = []
+                for path in duplicate_files:
+                    duplicate_sizes.append(path.stat().st_size)
+                file_sizes = []
+                for path in files:
+                    file_sizes.append(path.stat().st_size)
 
-            data = [sum(duplicate_sizes) / sum(file_sizes),
-                    (sum(file_sizes) - sum(duplicate_sizes)) / sum(file_sizes)]
-            categories = ['Files + Duplicates', 'Files Without Duplicates']
-            custom_colors = ['red', 'silver']
-            plt.pie(data, labels=categories, colors=custom_colors, autopct='%1.1f%%')
-            plt.title('File Size Distribution in Directory')
-            plt.show()
+                data = [sum(duplicate_sizes) / sum(file_sizes),
+                        (sum(file_sizes) - sum(duplicate_sizes)) / sum(file_sizes)]
+                categories = ['Files + Duplicates', 'Files Without Duplicates']
+                custom_colors = ['red', 'silver']
+                plt.pie(data, labels=categories, colors=custom_colors, autopct='%1.1f%%')
+                plt.title('File Size Distribution in Directory')
+                plt.show()
+            elif task == '3':
+                print('Program closed')
+                break
 else:
     print('Path does not exist')
