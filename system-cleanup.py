@@ -1,71 +1,45 @@
 from pathlib import Path
+import pandas as pd
 
-try:
-    path = Path(input("Directory path: "))
-    if path.exists():
-        def convert(num, unit_choice):
-            if unit_choice == 'kb':
-                result = num / 1024
-                return round(result, 2)
-            elif unit_choice == 'mb':
-                result = num / (1024 ** 2)
-                return round(result, 2)
-            elif unit_choice == 'gb':
-                result = num / (1024 ** 3)
-                return round(result, 2)
+def convert(num, unit_choice):
+    if unit_choice == 'kb':
+        result = num / 1024
+        return round(result, 2)
+    elif unit_choice == 'mb':
+        result = num / (1024 ** 2)
+        return round(result, 2)
+    elif unit_choice == 'gb':
+        result = num / (1024 ** 3)
+        return round(result, 2)
 
-        files = []
-        for item in path.rglob('*'):
-            if item.is_file():
-                files.append(item)
-        if len(files) > 0:
-            unit = input("Select unit (kb, mb, gb): ")
-            min_size = float(input(f"Minimum file size ({unit}): "))
-            match = []
-            sizes = []
-            for file in files:
-                size = convert(file.stat().st_size, unit)
-                if size >= min_size:
-                    match.append(file)
-                    sizes.append(size)
-
-            if len(match) > 0:
-                print(f"Files: {len(files)}")
-                print(f"Match: {len(match)}")
-                match_reference = dict(zip(match, sizes))
-                for k, v in match_reference.items():
-                    print(f"{v} {unit} | {k}")
-                decide = input("Remove files? (y/n): ")
-                if decide == 'y':
-                    remove = input("All files or a selection? (a/s): ")
-                    if remove == 'a':
-                        for item in match:
-                            item.unlink()
-                            print(f"{item} removed successfully")
-                    elif remove == 's':
-                        total = int(input("How many files to remove? "))
-                        if 0 < total <= len(match):
-                            nums = [i for i in range(len(match))]
-                            reference = dict(zip(nums, match))
-                            for index, file in reference.items():
-                                print(index, file)
-                            count = 0
-                            while count < total:
-                                select = int(input("Select file (number): "))
-                                if select in reference.keys():
-                                    reference[select].unlink()
-                                    print(f"{reference[select]} removed successfully")
-                                    count += 1
-                                else:
-                                    print("Number not in list")
-            else:
-                print(f"Files: {len(files)}")
-                print(f"Match: {len(match)}")
+path = Path(input("Directory path: "))
+if path.exists():
+    files = []
+    for item in path.rglob('*'):
+        if item.is_file():
+            files.append(item)
+    if len(files) > 0:
+        unit = input("Select unit (kb, mb, gb): ")
+        min_size = float(input(f"Minimum file size ({unit}): "))
+        location = []
+        name = []
+        sizes = []
+        for file in files:
+            size = convert(file.stat().st_size, unit)
+            if size >= min_size:
+                location.append(file.parent)
+                name.append(file.name)
+                sizes.append(size)
+        if len(name) > 0:
+            print(f"Files: {len(files)}")
+            print(f"Match: {len(name)}")
+            data = {'Location': [i for i in location], 'Name': [i for i in name], f'Size ({unit})': [i for i in sizes]}
+            df = pd.DataFrame(data)
+            print(df.to_string())
         else:
-            print("Empty directory")
+            print(f"Files: {len(files)}")
+            print(f"Match: {len(name)}")
     else:
-        print("Path does not exist")
-except ValueError:
-    print("Invalid input")
-except TypeError:
-    print("Unit not found")
+        print('Empty directory')
+else:
+    print('Path does not exist')
