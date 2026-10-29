@@ -42,7 +42,7 @@ if path.exists():
             print('-' * 8)
 
             print('Options')
-            print('1. Show file size frequency distribution\n2. Pie chart\n3. Remove files\n4. Exit')
+            print('1. Show file size frequency distribution\n2. Show part-to-whole relationship\n3. Remove files\n4. Exit')
             print('-' * 8)
             while True:
                 option = input('Select option: ')
@@ -54,7 +54,11 @@ if path.exists():
                     plt.show()
                     print('-' * 8)
                 elif option == '2':
-                    pass
+                    data = [sum(sizes), sum(total_size) - sum(sizes)]
+                    labels = ['Match Criteria', "Didn't Match Criteria"]
+                    plt.pie(data, labels=labels)
+                    plt.title('Directory Files')
+                    plt.show()
                     print('-' * 8)
                 elif option == '3':
                     files_to_remove = int(input('Number of files to remove: '))
