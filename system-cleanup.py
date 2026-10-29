@@ -49,7 +49,7 @@ if path.exists():
                 if option == '1':
                     plt.hist(sizes)
                     plt.title('File Size Frequency Distribution')
-                    plt.xlabel('File Size')
+                    plt.xlabel(f'File Size ({unit.upper()})')
                     plt.ylabel('Frequency')
                     plt.show()
                     print('-' * 8)
@@ -57,7 +57,13 @@ if path.exists():
                     pass
                     print('-' * 8)
                 elif option == '3':
-                    pass
+                    files_to_remove = int(input('Number of files to remove: '))
+                    if 0 < files_to_remove <= len(name):
+                        for n in range(1, files_to_remove + 1):
+                            index = int(input(f'Row index (file {n}): '))
+                            file_to_remove = df.loc[index, 'Path']
+                            file_to_remove.unlink()
+                            print(f'{file_to_remove.name} successfully removed')
                     print('-' * 8)
                 elif option == '4':
                     print('Program closed')
