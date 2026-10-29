@@ -42,7 +42,7 @@ if path.exists():
             print('-' * 8)
 
             print('Options')
-            print('1. Show file size frequency distribution\n2. Show part-to-whole relationship\n3. Remove files\n4. Exit')
+            print('1. Show file size frequency distribution\n2. Show file size part-to-whole relationship\n3. Remove files\n4. Exit')
             print('-' * 8)
             while True:
                 option = input('Select option: ')
@@ -54,10 +54,12 @@ if path.exists():
                     plt.show()
                     print('-' * 8)
                 elif option == '2':
-                    data = [sum(sizes), sum(total_size) - sum(sizes)]
-                    labels = ['Match Criteria', "Didn't Match Criteria"]
-                    plt.pie(data, labels=labels)
-                    plt.title('Directory Files')
+                    no_match = sum(total_size) - sum(sizes)
+                    data = [sum(sizes), no_match]
+                    labels = [f'Matched Files ({sum(sizes)} {unit.upper()})', f'Unmatched Files ({round(no_match, 2)} {unit.upper()})']
+                    custom_colors = ['red', 'gray']
+                    plt.pie(data, labels=labels, autopct='%1.1f%%', colors=custom_colors)
+                    plt.title(f'Total Directory Size: {round(sum(total_size), 2)} {unit.upper()}')
                     plt.show()
                     print('-' * 8)
                 elif option == '3':
