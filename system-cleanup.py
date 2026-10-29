@@ -43,6 +43,22 @@ if path.exists():
             print('Options')
             print('1. Histogram\n2. Pie chart\n3. Remove files\n4. Exit')
             print('-' * 8)
+            while True:
+                option = input('Select option: ')
+                if option == '1':
+                    pass
+                    print('-' * 8)
+                elif option == '2':
+                    pass
+                    print('-' * 8)
+                elif option == '3':
+                    pass
+                    print('-' * 8)
+                elif option == '4':
+                    print('Program closed')
+                    break
+                else:
+                    print('Invalid input')
         else:
             print(f'Files: {len(files)}')
             print(f'Match: {len(name)}')
