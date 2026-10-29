@@ -38,6 +38,11 @@ if path.exists():
             data = {f'Size ({unit})': [i for i in sizes], 'Name': [i for i in name], 'Path': [i for i in path]}
             df = pd.DataFrame(data)
             print(df.to_string())
+            print('-' * 8)
+
+            print('Options')
+            print('1. Histogram\n2. Pie chart\n3. Remove files\n4. Exit')
+            print('-' * 8)
         else:
             print(f'Files: {len(files)}')
             print(f'Match: {len(name)}')
