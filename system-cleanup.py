@@ -1,5 +1,6 @@
 from pathlib import Path
 import pandas as pd
+import matplotlib.pyplot as plt
 
 def convert(num, unit_choice):
     if unit_choice == 'kb':
@@ -41,12 +42,16 @@ if path.exists():
             print('-' * 8)
 
             print('Options')
-            print('1. Histogram\n2. Pie chart\n3. Remove files\n4. Exit')
+            print('1. Show file size frequency distribution\n2. Pie chart\n3. Remove files\n4. Exit')
             print('-' * 8)
             while True:
                 option = input('Select option: ')
                 if option == '1':
-                    pass
+                    plt.hist(sizes)
+                    plt.title('File Size Frequency Distribution')
+                    plt.xlabel('File Size')
+                    plt.ylabel('Frequency')
+                    plt.show()
                     print('-' * 8)
                 elif option == '2':
                     pass
